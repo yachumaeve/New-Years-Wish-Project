@@ -18,7 +18,7 @@ def get_db_connection():
     return mysql.connector.connect(**db_config)
 
 # 1. 取得所有收件人資料 (Recipient)
-@app.route('/api/recipients', methods=['GET'])
+@app.route('/recipients', methods=['GET'])
 def get_recipients():
     try:
         conn = get_db_connection()
@@ -35,7 +35,7 @@ def get_recipients():
         return jsonify({"error": "無法讀取收件人資料", "details": str(e)}), 500
 
 # 2. 儲存捐贈者資料並更新認領狀態 (Donor)
-@app.route('/api/donors', methods=['POST'])
+@app.route('/donors', methods=['POST'])
 def create_donor():
     data = request.json # 接收前端 JSON 資料
     try:
