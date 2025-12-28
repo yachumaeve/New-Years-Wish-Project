@@ -15,31 +15,32 @@ spec:
         app: backend
     spec:
       containers:
-      - name: backend-container
-        image: maeveyang/python-backend:latest 
-        ports:
-        - containerPort: 8080
-        env:
-        # 資料庫連線資訊，與 mysql-service 名稱對應
-        - name: DB_HOST
-          value: "mysql-service"
-        - name: DB_PORT
-          value: "3306"
-        - name: DB_NAME
-          valueFrom:
-            secretKeyRef:
-              name: mysql-config
-              key: db_name
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: mysql-config
-              key: db_user
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-config
-              key: db_password
+        - name: backend-container
+          image: maeveyang/python-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            # 資料庫連線資訊，與 mysql-service 名稱對應
+            - name: DB_HOST
+              value: "mysql-service"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-config
+                  key: db_name
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-config
+                  key: db_user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-config
+                  key: db_password
 ---
 apiVersion: v1
 kind: Service
