@@ -1,27 +1,96 @@
-<div style="padding: 20px; font-family: sans-serif;">
-  <h1>Angular + K8s 部署測試</h1>
-  <h2>Kubernetes 部署測試 - V2</h2>
-  <p [style.color]="message === '連線成功！' ? 'green' : 'red'">
-    狀態：{{ message }}
-  </p>
+<div class="main-wrapper">
+  <header class="hero">
+    <div class="lantern">🏮</div>
+    <h1>迎春送暖・物資募集</h1>
+    <p>您的點滴分享，溫暖他們的整個新年</p>
+  </header>
 
-  <table border="1" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-    <thead>
-      <tr style="background-color: #f2f2f2;">
-        <th>ID</th>
-        <th>姓名</th>
-        <th>電子郵件</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.id }}</td>
-        <td>{{ user.name }}</td>
-        <td>{{ user.email }}</td>
-      </tr>
-      <tr *ngIf="users.length === 0">
-        <td colspan="3" style="text-align: center; padding: 10px;">目前沒有資料</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="container">
+    <div class="card-grid" *ngIf="wishlList && wishlList.length > 0">
+      <div class="card" *ngFor="let item of wishlList" 
+           (click)="openModal(item)" 
+           [class.disabled]="item.is_taken_on === 1">
+        <div class="badge" [class.claimed]="item.is_taken_on === 1">
+          {{ item.is_taken_on === 1 ? '已認領' : '尚未認領' }}
+        </div>
+        <div class="card-content">
+          <h3 class="name">{{ formatName(item.recipient_name) }} ({{item.age}}歲)</h3>
+          <p class="org">📍 {{ item.organization }} ({{item.organization_location}})</p>
+          <div class="divider"></div>
+          <p class="wish-desc"><strong>心願項目：</strong>{{ item.wish }}</p>
+        </div>
+        <div class="card-footer" *ngIf="item.is_taken_on === 0">我要認領 →</div>
+      </div>
+    </div>
+    <div class="empty-state" *ngIf="wishlList !== null && wishlList.length === 0 && !isLoading">
+      <div class="empty-icon">🧧</div>
+      <h3>目前的願望都已達成！</h3>
+      <p>感謝大家的愛心，讓這個新年充滿溫暖。</p>
+      <button class="btn-submit" (click)="fetchRecipients()">刷新清單</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="selectedItem">
+    <div class="modal-card">
+      <ng-container *ngIf="!showSuccess; else successTemplate">
+        <div class="modal-header">
+          <span class="category-tag">願望認領</span>
+          <h2>認領項目：{{ selectedItem.wish }}</h2>
+        </div>
+
+        <div class="wish-content-box">
+          <div class="wish-quote">“</div>
+          <div class="wish-body">
+            <p class="wish-text">{{ selectedItem.content }}</p>
+            <p class="wish-info">— {{ formatName(selectedItem.recipient_name) }}，{{ selectedItem.organization }}</p>
+          </div>
+        </div>
+
+        <p class="subtitle">請填寫您的聯絡資訊，我們將派員與您聯繫</p>
+        
+        <form [formGroup]="donationForm" (ngSubmit)="submitDonation()">
+          <div class="form-item">
+            <label>您的姓名 *</label>
+            <input formControlName="name" placeholder="請輸入姓名">
+          </div>
+          <div class="form-item">
+            <label>聯絡電話 *</label>
+            <input formControlName="phone" placeholder="例：0912345678">
+          </div>
+          <div class="form-item">
+            <label>Email *</label>
+            <input formControlName="email" placeholder="example@mail.com">
+          </div>
+
+          <div class="btn-group">
+            <button type="button" class="btn-cancel" (click)="closeModal()">取消</button>
+            <button type="submit" class="btn-submit" [disabled]="donationForm.invalid">確認認領</button>
+          </div>
+        </form>
+      </ng-container>
+
+      <ng-template #successTemplate>
+        <div class="success-box">
+          <div class="success-icon">🧧</div>
+          <h3>資料已送出！</h3>
+          <p>請至 mail 收取信件，感謝您的愛心。</p>
+          <button class="btn-submit" (click)="closeModal()">回到首頁</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="spinner-container">
+      <div class="spring-spinner">🏮</div>
+      <p>資料處理中，請稍候...</p>
+    </div>
+  </div>
+
+  <div class="error-lightbox" [class.show]="errorMsg !== ''">
+    <div class="error-content">
+      <span class="error-icon">⚠️</span>
+      <span class="error-text">{{ errorMsg }}</span>
+    </div>
+  </div>
 </div>

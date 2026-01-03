@@ -1,0 +1,399 @@
+/* 定義 CSS 變數，方便統一管理顏色 */
+:host {
+    --red-primary: #B73027;
+    --red-dark: #6A120A;
+    --red-light: #EC6A78;
+    --beige-bg: #F8DAC4;
+    --white: #FFFFFF;
+}
+
+.main-wrapper {
+    background-color: #fdf5f0;
+    min-height: 100vh;
+    padding-bottom: 50px;
+}
+
+/* Hero Banner 區塊 */
+.hero {
+    background: linear-gradient(135deg, var(--red-primary), var(--red-dark));
+    color: var(--white);
+    text-align: center;
+    padding: 80px 20px;
+    position: relative;
+}
+
+.hero .lantern {
+    font-size: 50px;
+    display: inline-block;
+    animation: swing 3s infinite ease-in-out;
+}
+
+.hero h1 {
+    margin: 15px 0 5px;
+    font-size: 2.5rem;
+}
+
+/* 內容容器與網格佈局 */
+/* .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+} */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    /* 確保 container 至少有一定高度，才能看到垂直置中效果 */
+    min-height: 60vh; 
+    display: flex;
+    flex-direction: column;
+}
+
+.card-grid {
+    display: grid;
+    /* RWD: 自動適應欄位寬度，最小 280px */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 50px 0;
+}
+
+/* 牌卡樣式 */
+.card {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid var(--beige-bg);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover:not(.disabled) {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card.disabled {
+    filter: grayscale(1);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.card .badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    background: #fff3f0;
+    color: var(--red-primary);
+    border: 1px solid var(--red-primary);
+}
+
+.card .badge.claimed {
+    background: #eee;
+    color: #888;
+    border-color: #ccc;
+}
+
+.card-content {
+    padding: 24px;
+    flex-grow: 1;
+}
+
+.card .name {
+    margin: 0 0 10px;
+    color: var(--red-dark);
+}
+
+.card .org {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.card .divider {
+    height: 1px;
+    background: #eee;
+    margin: 15px 0;
+}
+
+.card-footer {
+    background: #fff9f6;
+    padding: 15px;
+    text-align: center;
+    color: var(--red-primary);
+    font-weight: bold;
+    border-top: 1px solid #eee;
+}
+
+.empty-state {
+    /* 使用 margin: auto 可以自動撐開上下左右空間，達到絕對置中 */
+    margin: auto; 
+    text-align: center;
+    padding: 40px;
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    max-width: 400px;
+    width: 100%;
+}
+
+.empty-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.empty-state h3 {
+    color: var(--red-primary);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* Modal 彈窗樣式 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 100%;
+    border-top: 8px solid var(--red-primary);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* 表單元件 */
+.form-item {
+    margin-bottom: 15px;
+}
+
+.form-item label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-item input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    /* 確保 padding 不會撐開寬度 */
+}
+
+.btn-group {
+    margin-top: 25px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-submit {
+    background: var(--red-primary);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-submit:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-cancel {
+    background: #eee;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* 成功畫面樣式 */
+.success-box {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.success-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+/* 心願故事區塊 */
+.wish-content-box {
+    background: #FFF9F6;
+    border-left: 4px solid var(--red-primary);
+    padding: 20px;
+    margin: 15px 0 25px 0;
+    border-radius: 4px 12px 12px 4px;
+    display: flex;
+    gap: 15px;
+}
+
+.wish-quote {
+    color: var(--beige-bg);
+    font-size: 40px;
+    font-family: 'Times New Roman', serif;
+    line-height: 1;
+    margin-top: -10px;
+}
+
+.wish-body {
+    flex: 1;
+}
+
+.wish-text {
+    font-size: 1.05rem;
+    color: var(--red-dark);
+    line-height: 1.6;
+    margin: 0 0 10px 0;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.wish-info {
+    font-size: 0.85rem;
+    color: #888;
+    margin: 0;
+    text-align: right;
+}
+
+/* Modal 內的小標籤 */
+.category-tag {
+    display: inline-block;
+    background: var(--red-light);
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: var(--red-primary);
+}
+
+.subtitle {
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+/* 確保 disabled 狀態的文字也變灰 */
+.card.disabled .name, 
+.card.disabled .wish-desc,
+.card.disabled .org {
+    color: #999;
+}
+
+/* --- Loading Spinner 樣式 --- */
+.loading-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* 確保在最上層 */
+}
+
+.spinner-container {
+    text-align: center;
+    color: var(--red-primary);
+}
+
+.spring-spinner {
+    font-size: 50px;
+    animation: bounce 0.6s infinite alternate;
+}
+
+@keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-20px); }
+}
+
+/* --- Error Lightbox 樣式 --- */
+.error-lightbox {
+    position: fixed;
+    top: -100px; /* 預設在畫面外 */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff4d4d;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    z-index: 10000;
+    transition: top 0.5s ease-in-out; /* 滑入動畫 */
+}
+
+.error-lightbox.show {
+    top: 30px; /* 顯示時滑入畫面上方 */
+}
+
+.error-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.error-icon { font-size: 20px; }
+.error-text { font-weight: 500; }
+
+/* 動畫效果 */
+@keyframes swing {
+    0% {
+        transform: rotate(-10deg);
+    }
+
+    50% {
+        transform: rotate(10deg);
+    }
+
+    100% {
+        transform: rotate(-10deg);
+    }
+}
+
+/* 手機版 RWD 調整 */
+@media (max-width: 600px) {
+    .hero {
+        padding: 40px 20px;
+    }
+
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+
+    .modal-card {
+        padding: 20px;
+    }
+}
