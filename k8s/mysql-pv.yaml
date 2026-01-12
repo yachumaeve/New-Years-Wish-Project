@@ -1,18 +1,35 @@
 # k8s/mysql-pv.yaml
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  local:
+    path: /mnt/mysql-data # 確保 Worker 的這個資料夾已經 sudo mount /dev/nvme1n1 了
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - ip-172-31-44-232 # 這是你的 Worker Node 名字
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-pv-claim
-  labels:
-    app: mysql
 spec:
-  # 必須與您的 StorageClass 名稱一致
-  storageClassName: ebs-gp3-fast 
-  # 讀寫模式：ReadWriteOnce 表示只能被單一節點以讀寫方式掛載 (符合 MySQL 需求)
+  storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      # 請求 5GB 的儲存空間
-      storage: 4Gi
-
+      storage: 5Gi

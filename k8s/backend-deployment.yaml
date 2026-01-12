@@ -20,27 +20,30 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          # --- 新增資源限制 ---
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi" # 限制 Flask 最大使用 512MB，保護 Worker Node
+              cpu: "500m"
+          # ------------------
           env:
-            # 資料庫連線資訊，與 mysql-service 名稱對應
             - name: DB_HOST
               value: "mysql-service"
             - name: DB_PORT
               value: "3306"
+            # 注意：這裡的 name 改為 mysql-secret，與你剛才手動建的名稱一致
             - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-config
-                  key: db_name
+              value: "charitydb" # 也可以直接給值，或從 Secret 讀取
             - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-config
-                  key: db_user
+              value: "root" # 通常 MySQL Root 密碼我們分開放
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-config
-                  key: db_password
+                  name: mysql-secret # 確保這跟 kubectl get secret 看到的名稱一樣
+                  key: mysql-root-password
 ---
 apiVersion: v1
 kind: Service
