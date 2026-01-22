@@ -1,0 +1,14 @@
+## check K8s
+
+kubectl get ns
+kubectl get deploy --all-namespaces
+kubectl get services --all-namespaces
+kubectl get services --all-namespaces
+kubectl get ingress --all-namespaces
+kubectl describe ingress --all-namespaces
+kubectl get services --all-namespaces
+kubectl describe services backend-service
+kubectl get deploy --all-namespaces
+kubectl describe services frontend-service
+kubectl get nodes
+kubectl describe node <node name>

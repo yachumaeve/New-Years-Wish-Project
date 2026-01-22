@@ -1,11 +1,10 @@
-# k8s/mysql-pv.yaml
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: mysql-pv
 spec:
   capacity:
-    storage: 5Gi
+    storage: 6Gi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -20,7 +19,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - ip-172-31-44-232 # 這是你的 Worker Node 名字
+                - ip-172-31-42-91 # 這是你的 Worker Node 名字
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -32,4 +31,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 6Gi

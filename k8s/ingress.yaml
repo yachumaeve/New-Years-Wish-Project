@@ -3,11 +3,9 @@ kind: Ingress
 metadata:
   name: main-ingress
   annotations:
-    # 指定使用的 Ingress Class
     kubernetes.io/ingress.class: "nginx"
-    # 讓後端 API 的路徑重寫（如果是 /api/xxx 會轉成 /xxx 給後端）
+    # 這是路徑重寫的關鍵：將 /api/recipients 轉發給後端時變成 /recipients
     nginx.ingress.kubernetes.io/rewrite-target: /$1
-    cert-manager.io/cluster-issuer: "letsencrypt-prod" # 連動 Cert-manager
 spec:
   tls: # --- 新增這個區段 ---
     - hosts:
@@ -17,14 +15,14 @@ spec:
     - host: www.wishwithheart.com
       http:
         paths:
-          - path: /api/(.*) # 使用正則表達式捕獲路徑
+          - path: /api/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: backend-service
                 port:
                   number: 8080
-          - path: /?(.*) # 其他流量導向前端
+          - path: /?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
